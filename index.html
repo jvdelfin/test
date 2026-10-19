@@ -162,6 +162,59 @@
     </div>
     <p><strong>Total: ₱<span id="cart-total">0</span></strong></p>
   </section>
+  
+<section id="checkout">
+    <h2>Checkout</h2>
+    <p>Enter your details to place your Ecobalot order.</p>
+
+    <form id="checkout-form">
+        <label for="customer-name">Full Name</label>
+        <input
+            type="text"
+            id="customer-name"
+            name="customerName"
+            placeholder="Enter your full name"
+            required
+        >
+
+        <label for="customer-phone">Phone Number</label>
+        <input
+            type="tel"
+            id="customer-phone"
+            name="customerPhone"
+            placeholder="e.g. 09XXXXXXXXX"
+            required
+        >
+
+        <label for="customer-address">Delivery Address</label>
+        <textarea
+            id="customer-address"
+            name="customerAddress"
+            placeholder="House number, street, barangay, city"
+            required
+        ></textarea>
+
+        <label for="payment-method">Payment Method</label>
+        <select id="payment-method" name="paymentMethod" required>
+            <option value="">Choose a payment method</option>
+            <option value="GCash">GCash Manual Transfer</option>
+            <option value="COD">Cash on Delivery</option>
+            <option value="Online Gateway">Online Payment Gateway</option>
+            <option value="Bank Transfer">Manual Bank Transfer</option>
+        </select>
+
+        <label for="order-notes">Order Notes (Optional)</label>
+        <textarea
+            id="order-notes"
+            name="orderNotes"
+            placeholder="Additional instructions"
+        ></textarea>
+
+        <button type="submit">Place Order</button>
+    </form>
+
+    <p id="checkout-message" role="status"></p>
+</section>
   <script>
 const cart = [];
 
@@ -229,6 +282,31 @@ function displayCart() {
 
     cartTotal.textContent = total;
 }
+document.getElementById("checkout-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    if (cart.length === 0) {
+        document.getElementById("checkout-message").textContent =
+            "Your cart is empty. Please add a product before checking out.";
+        return;
+    }
+
+    const customerName = document.getElementById("customer-name").value.trim();
+    const customerPhone = document.getElementById("customer-phone").value.trim();
+    const customerAddress = document.getElementById("customer-address").value.trim();
+    const paymentMethod = document.getElementById("payment-method").value;
+    const orderNotes = document.getElementById("order-notes").value.trim();
+
+    const orderTotal = cart.reduce(function(total, item) {
+        return total + item.price * item.quantity;
+    }, 0);
+
+    document.getElementById("checkout-message").textContent =
+        "Checkout form validated! Order for " + customerName +
+        ". Total: ₱" + orderTotal +
+        ". Payment method: " + paymentMethod +
+        ". Your order has NOT been sent yet. Please wait for the next setup step.";
+});
   </script>
 </body>
 </html>
